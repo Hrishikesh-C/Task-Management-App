@@ -1,33 +1,40 @@
 import { Listbox, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import { BsChevronExpand } from "react-icons/bs";
-import { summary } from "../../assets/data";
-import clsx from "clsx";
 import { getInitials } from "../../utils";
 import { MdCheck } from "react-icons/md";
+import { useGetTeamListQuery } from "../../redux/slices/api/userApiSlice";
+import clsx from "clsx";
 
 const UserList = ({ setTeam, team }) => {
-  const data = summary.users;
+  const { data, isLoading } = useGetTeamListQuery();
   const [selectedUsers, setSelectedUsers] = useState([]);
 
   const handleChange = (el) => {
     setSelectedUsers(el);
     setTeam(el?.map((u) => u._id));
   };
+
   useEffect(() => {
-    if (team?.length < 1) {
-      data && setSelectedUsers([data[0]]);
-    } else {
-      setSelectedUsers(team);
+    if (!isLoading && data) {
+      if (team?.length < 1) {
+        setSelectedUsers([data[0]]);
+        setTeam([data[0]._id]);
+      } else {
+        const matchedUsers = data.filter((user) =>
+          team.includes(user._id)
+        );
+        setSelectedUsers(matchedUsers);
+      }
     }
-  }, []);
+  }, [data, isLoading, team, setTeam]);
 
   return (
     <div>
       <p className='text-gray-700'>Assign Task To: </p>
       <Listbox
         value={selectedUsers}
-        onChange={(el) => handleChange(el)}
+        onChange={handleChange}
         multiple
       >
         <div className='relative mt-1'>
@@ -35,7 +42,6 @@ const UserList = ({ setTeam, team }) => {
             <span className='block truncate'>
               {selectedUsers?.map((user) => user.name).join(", ")}
             </span>
-
             <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2'>
               <BsChevronExpand
                 className='h-5 w-5 text-gray-400'
@@ -55,9 +61,9 @@ const UserList = ({ setTeam, team }) => {
                 <Listbox.Option
                   key={index}
                   className={({ active }) =>
-                    `relative cursor-default select-none py-2 pl-10 pr-4. ${
+                    `relative cursor-default select-none py-2 pl-10 pr-4 ${
                       active ? "bg-amber-100 text-amber-900" : "text-gray-900"
-                    } `
+                    }`
                   }
                   value={user}
                 >
@@ -76,11 +82,11 @@ const UserList = ({ setTeam, team }) => {
                         </div>
                         <span>{user.name}</span>
                       </div>
-                      {selected ? (
+                      {selected && (
                         <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600'>
                           <MdCheck className='h-5 w-5' aria-hidden='true' />
                         </span>
-                      ) : null}
+                      )}
                     </>
                   )}
                 </Listbox.Option>

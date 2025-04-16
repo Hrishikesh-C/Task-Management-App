@@ -52,13 +52,18 @@ const linkData = [
 
 const Sidebar = () => {
   const { user } = useSelector((state) => state.auth);
-
   const dispatch = useDispatch();
   const location = useLocation();
 
   const path = location.pathname.split("/")[1];
 
-  const sidebarLinks = user?.isAdmin ? linkData : linkData.slice(0, 5);
+  // Fix: Explicitly check if user.isAdmin is true
+  const sidebarLinks = user?.isAdmin === true ? linkData : linkData.slice(0, 5);
+
+  // Debugging Logs
+  console.log("User:", user);
+  console.log("User Admin Status:", user?.isAdmin);
+  console.log("Sidebar Links:", sidebarLinks.map(link => link.label));
 
   const closeSidebar = () => {
     dispatch(setOpenSidebar(false));
@@ -75,31 +80,32 @@ const Sidebar = () => {
         )}
       >
         {el.icon}
-        <span className='hover:text-[#2564ed]'>{el.label}</span>
+        <span className="hover:text-[#2564ed]">{el.label}</span>
       </Link>
     );
   };
+
   return (
-    <div className='w-full  h-full flex flex-col gap-6 p-5'>
-      <h1 className='flex gap-1 items-center'>
-        <p className='bg-blue-600 p-2 rounded-full'>
-          <MdOutlineAddTask className='text-white text-2xl font-black' />
+    <div className="w-full h-full flex flex-col gap-6 p-5">
+      <h1 className="flex gap-1 items-center">
+        <p className="bg-blue-600 p-2 rounded-full">
+          <MdOutlineAddTask className="text-white text-2xl font-black" />
         </p>
-        <span className='text-2xl font-bold text-black'>TaskMe</span>
+        <span className="text-2xl font-bold text-black">TaskMe</span>
       </h1>
 
-      <div className='flex-1 flex flex-col gap-y-5 py-8'>
+      <div className="flex-1 flex flex-col gap-y-5 py-8">
         {sidebarLinks.map((link) => (
           <NavLink el={link} key={link.label} />
         ))}
       </div>
 
-      <div className=''>
-        <button className='w-full flex gap-2 p-2 items-center text-lg text-gray-800'>
+      {/* <div>
+        <button className="w-full flex gap-2 p-2 items-center text-lg text-gray-800">
           <MdSettings />
           <span>Settings</span>
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

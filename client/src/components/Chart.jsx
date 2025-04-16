@@ -9,18 +9,24 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { chartData } from "../assets/data";
 
-export const Chart = () => {
+export const Chart = ({ tasks }) => {
+  // Convert raw tasks object into chart data
+  const chartData = [
+    { name: "Completed", total: tasks?.["completed"] || 0 },
+    { name: "In Progress", total: tasks?.["in progress"] || 0 },
+    { name: "Todo", total: tasks?.["todo"] || 0 },
+  ];
+
   return (
-    <ResponsiveContainer width={"100%"} height={300}>
-      <BarChart width={150} height={40} data={chartData}>
-        <XAxis dataKey='name' />
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart data={chartData}>
+        <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
         <Legend />
-        <CartesianGrid strokeDasharray='3 3' />
-        <Bar dataKey='total' fill='#8884d8' />
+        <CartesianGrid strokeDasharray="3 3" />
+        <Bar dataKey="total" fill="#8884d8" />
       </BarChart>
     </ResponsiveContainer>
   );

@@ -96,6 +96,49 @@ export const duplicateTask = async (req, res) => {
   }
 };
 
+// export const duplicateTask = async (req, res) => {
+//   try {
+//     const { id } = req.body;
+
+//     const task = await Task.findById(id);
+//     if (!task) return res.status(404).json({ message: "Task not found" });
+
+//     const newTaskData = task.toObject();
+//     delete newTaskData._id;
+
+//     const newTask = await Task.create({
+//       ...newTaskData,
+//       title: task.title + " - Duplicate",
+//       team: task.team,
+//       subTasks: task.subTasks,
+//       assets: task.assets,
+//       priority: task.priority,
+//       stage: task.stage,
+//     });
+
+//     let text = "New task has been assigned to you";
+//     if (task.team.length > 1) {
+//       text += ` and ${task.team.length - 1} others.`;
+//     }
+
+//     text += ` The task priority is set at ${task.priority} priority, so check and act accordingly. The task date is ${task.date.toDateString()}. Thank you!!!`;
+
+//     await Notice.create({
+//       team: task.team,
+//       text,
+//       task: newTask._id,
+//     });
+
+//     res
+//       .status(200)
+//       .json({ status: true, message: "Task duplicated successfully." });
+
+//   } catch (error) {
+//     console.error("Duplicate Task Error:", error);
+//     return res.status(500).json({ status: false, message: error.message });
+//   }
+// };
+
 export const postTaskActivity = async (req, res) => {
   try {
     const { id } = req.params;
@@ -123,14 +166,95 @@ export const postTaskActivity = async (req, res) => {
   }
 };
 
+// export const dashboardStatistics = async (req, res) => {
+//   try {
+//     const { userId, isAdmin } = req.user;
+//      // Ensure userId and isAdmin are available
+//      if (!userId || typeof isAdmin === 'undefined') {
+//       return res.status(400).json({ status: false, message: "User information is missing" });
+//     }
+
+//     const allTasks = isAdmin
+//       ? await Task.find({
+//           isTrashed: false,
+//         })
+//           .populate({
+//             path: "team",
+//             select: "name role title email",
+//           })
+//           .sort({ _id: -1 })
+//       : await Task.find({
+//           isTrashed: false,
+//           team: { $all: [userId] },
+//         })
+//           .populate({
+//             path: "team",
+//             select: "name role title email",
+//           })
+//           .sort({ _id: -1 });
+
+//     const users = await User.find({ isActive: true })
+//       .select("name title role isAdmin createdAt")
+//       .limit(10)
+//       .sort({ _id: -1 });
+
+//     //   group task by stage and calculate counts
+//     const groupTaskks = allTasks.reduce((result, task) => {
+//       const stage = task.stage;
+
+//       if (!result[stage]) {
+//         result[stage] = 1;
+//       } else {
+//         result[stage] += 1;
+//       }
+
+//       return result;
+//     }, {});
+
+//     // Group tasks by priority
+//     const groupData = Object.entries(
+//       allTasks.reduce((result, task) => {
+//         const { priority } = task;
+
+//         result[priority] = (result[priority] || 0) + 1;
+//         return result;
+//       }, {})
+//     ).map(([name, total]) => ({ name, total }));
+
+//     // calculate total tasks
+//     const totalTasks = allTasks?.length;
+//     const last10Task = allTasks?.slice(0, 10);
+
+//     const summary = {
+//       totalTasks,
+//       last10Task,
+//       users: isAdmin ? users : [],
+//       tasks: groupTaskks,
+//       graphData: groupData,
+//     };
+
+//     res.status(200).json({
+//       status: true,
+//       message: "Successfully",
+//       ...summary,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(400).json({ status: false, message: error.message });
+//   }
+// };
+
 export const dashboardStatistics = async (req, res) => {
   try {
     const { userId, isAdmin } = req.user;
 
+    // Ensure userId and isAdmin are available
+    if (!userId || typeof isAdmin === 'undefined') {
+      return res.status(400).json({ status: false, message: "User information is missing" });
+    }
+
     const allTasks = isAdmin
-      ? await Task.find({
-          isTrashed: false,
-        })
+      ? await Task.find({ isTrashed: false })
           .populate({
             path: "team",
             select: "name role title email",
@@ -146,21 +270,19 @@ export const dashboardStatistics = async (req, res) => {
           })
           .sort({ _id: -1 });
 
+    if (!allTasks || allTasks.length === 0) {
+      return res.status(404).json({ status: false, message: "No tasks found" });
+    }
+
     const users = await User.find({ isActive: true })
       .select("name title role isAdmin createdAt")
       .limit(10)
       .sort({ _id: -1 });
 
-    //   group task by stage and calculate counts
-    const groupTaskks = allTasks.reduce((result, task) => {
-      const stage = task.stage;
-
-      if (!result[stage]) {
-        result[stage] = 1;
-      } else {
-        result[stage] += 1;
-      }
-
+    // Group tasks by stage
+    const groupTasks = allTasks.reduce((result, task) => {
+      const stage = task.stage || "Unknown";
+      result[stage] = (result[stage] || 0) + 1;
       return result;
     }, {});
 
@@ -168,32 +290,32 @@ export const dashboardStatistics = async (req, res) => {
     const groupData = Object.entries(
       allTasks.reduce((result, task) => {
         const { priority } = task;
-
         result[priority] = (result[priority] || 0) + 1;
         return result;
       }, {})
     ).map(([name, total]) => ({ name, total }));
 
-    // calculate total tasks
-    const totalTasks = allTasks?.length;
-    const last10Task = allTasks?.slice(0, 10);
+    // Calculate total tasks
+    const totalTasks = allTasks.length;
+    const last10Task = allTasks.slice(0, 10);
 
+    // Prepare the summary
     const summary = {
       totalTasks,
       last10Task,
       users: isAdmin ? users : [],
-      tasks: groupTaskks,
+      tasks: groupTasks,
       graphData: groupData,
     };
 
     res.status(200).json({
       status: true,
-      message: "Successfully",
+      message: "Dashboard data fetched successfully",
       ...summary,
     });
   } catch (error) {
-    console.log(error);
-    return res.status(400).json({ status: false, message: error.message });
+    console.error("Error in fetching dashboard statistics:", error);
+    return res.status(500).json({ status: false, message: "Internal server error" });
   }
 };
 
