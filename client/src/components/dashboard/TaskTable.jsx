@@ -47,7 +47,7 @@ const TaskTable = ({ tasks }) => {
                 </td>
                 <td className="py-2">
                   <div className="flex">
-                    {task.team.map((m, index) => (
+                    {task.team?.map((m, index) => (
                       <div
                         key={index}
                         className={clsx(

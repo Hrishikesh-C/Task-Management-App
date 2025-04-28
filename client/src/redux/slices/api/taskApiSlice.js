@@ -22,22 +22,26 @@ export const taskApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+          "Content-Type": "application/json",
+        }
+        
       }),
     }),
 
-    createTask: builder.mutation({
-      query: (data) => ({
-        url: `${TASK_URL}/create`,
-        method: "POST",
-        body: data,
-        credentials: "include",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      }),
-    }),
+   createTask: builder.mutation({
+  query: (data) => ({
+    url: `${TASK_URL}/create`,
+    method: "POST",
+    body: data,
+    credentials: "include",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  }),
+  // Invalidate the cache so the task list is updated
+  invalidatesTags: [{ type: "Task", id: "LIST" }],
+}),
 
     duplicateTask: builder.mutation({
       query: (id) => ({

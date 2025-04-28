@@ -74,8 +74,10 @@ const Dashboard = () => {
       <PriorityChart tasks={data?.tasks} />
 
       <div className="w-full flex flex-col md:flex-row gap-4 2xl:gap-10 py-8">
-        <TaskTable tasks={data?.tasks?.last10Task || []} />
-        <UserTable users={data?.tasks?.users || []} />
+        {/* <TaskTable tasks={data?.tasks?.last10Task || []} /> */}
+        <TaskTable tasks={data?.tasks || []} />
+
+        <UserTable users={data?.users || []} />
       </div>
     </div>
   );

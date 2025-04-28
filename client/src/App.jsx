@@ -22,6 +22,7 @@ import About from "./pages/HomeComponents/About";
 import Faq from "./pages/HomeComponents/FAQ";
 import Member from "./pages/HomeComponents/Member";
 import UserGuide from "./pages/HomeComponents/UserGuide";
+import Chatbot from "./pages/chatbot/Chatbot";
 
 function Layout() {
   const { user } = useSelector((state) => state.auth);
@@ -120,6 +121,8 @@ function App() {
           <Route path="/team" element={<Users />} />
           <Route path="/trashed" element={<Trash />} />
           <Route path="/task/:id" element={<TaskDetails />} />
+          <Route path="/chatbot" element={<Chatbot />} /> {/* Added here */}
+
         </Route>
       </Routes>
       <Toaster richColors />

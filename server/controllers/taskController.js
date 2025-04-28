@@ -319,34 +319,34 @@ export const dashboardStatistics = async (req, res) => {
   }
 };
 
-export const getTasks = async (req, res) => {
-  try {
-    const { stage, isTrashed } = req.query;
+// export const getTasks = async (req, res) => {
+//   try {
+//     const { stage, isTrashed } = req.query;
 
-    let query = { isTrashed: isTrashed ? true : false };
+//     let query = { isTrashed: isTrashed ? true : false };
 
-    if (stage) {
-      query.stage = stage;
-    }
+//     if (stage) {
+//       query.stage = stage;
+//     }
 
-    let queryResult = Task.find(query)
-      .populate({
-        path: "team",
-        select: "name title email",
-      })
-      .sort({ _id: -1 });
+//     let queryResult = Task.find(query)
+//       .populate({
+//         path: "team",
+//         select: "name title email",
+//       })
+//       .sort({ _id: -1 });
 
-    const tasks = await queryResult;
+//     const tasks = await queryResult;
 
-    res.status(200).json({
-      status: true,
-      tasks,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(400).json({ status: false, message: error.message });
-  }
-};
+//     res.status(200).json({
+//       status: true,
+//       tasks,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(400).json({ status: false, message: error.message });
+//   }
+// };
 
 export const getTask = async (req, res) => {
   try {
@@ -371,6 +371,37 @@ export const getTask = async (req, res) => {
     return res.status(400).json({ status: false, message: error.message });
   }
 };
+export const getTasks = async (req, res) => {
+  try {
+    const { stage, isTrashed } = req.query;
+
+    // Convert isTrashed to a boolean
+    let query = { isTrashed: isTrashed === 'true' }; // 'true' string will become true, else false
+
+    // Add the stage filter if it's provided
+    if (stage) {
+      query.stage = stage;
+    }
+
+    // Query the tasks, populating team and sorting by creation date (descending)
+    const tasks = await Task.find(query)
+      .populate({
+        path: "team",
+        select: "name title email",  // Assuming 'team' is populated with these fields
+      })
+      .sort({ _id: -1 });  // Sort by creation date (descending)
+
+    // Return the result
+    res.status(200).json({
+      status: true,
+      tasks,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ status: false, message: error.message });
+  }
+};
+
 
 export const createSubTask = async (req, res) => {
   try {
