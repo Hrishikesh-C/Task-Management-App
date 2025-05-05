@@ -147,12 +147,14 @@ const Register = () => {
               <label className="block text-sm font-medium text-gray-400">Role</label>
               <select
                 {...register("role", { required: "Role is required!" })}
-                className="mt-1 w-full px-4 py-2 bg-[#1e293b] text-white placeholder:text-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                className="mt-1 w-full px-4 py-2 bg-[#1e293b] text-white border border-white/10 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none transition"
               >
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
               </select>
-              {errors.role && <p className="text-red-500 text-xs mt-1">{errors.role.message}</p>}
+              {errors.role && (
+                <p className="text-red-500 text-xs mt-1">{errors.role.message}</p>
+              )}
             </div>
 
             {isLoading ? (
@@ -168,7 +170,7 @@ const Register = () => {
 
           <p className="text-sm text-gray-400 text-center mt-4">
             Already have an account?{" "}
-            <Link to="/log-in" className="text-purple-400 hover:underline font-medium">
+            <Link to="/login" className="text-purple-400 hover:underline font-medium">
               Login
             </Link>
           </p>

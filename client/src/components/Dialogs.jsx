@@ -22,40 +22,40 @@ export default function ConfirmatioDialog({
   return (
     <>
       <ModalWrapper open={open} setOpen={closeDialog}>
-        <div className='py-4 w-full flex flex-col gap-4 items-center justify-center'>
-          <Dialog.Title as='h3' className=''>
+        <div className='py-6 px-4 w-full flex flex-col gap-6 items-center justify-center bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#1e40af] rounded-xl shadow-lg'>
+          <Dialog.Title as='h3'>
             <p
               className={clsx(
-                "p-3 rounded-full ",
+                "p-4 rounded-full text-white shadow-md",
                 type === "restore" || type === "restoreAll"
-                  ? "text-yellow-600 bg-yellow-100"
-                  : "text-red-600 bg-red-200"
+                  ? "bg-gradient-to-r from-yellow-400 to-yellow-600"
+                  : "bg-gradient-to-r from-pink-500 to-purple-600"
               )}
             >
               <FaQuestion size={60} />
             </p>
           </Dialog.Title>
 
-          <p className='text-center text-gray-500'>
+          <p className='text-center text-gray-300 text-sm md:text-base'>
             {msg ?? "Are you sure you want to delete the selected record?"}
           </p>
 
-          <div className='bg-gray-50 py-3 sm:flex sm:flex-row-reverse gap-4'>
+          <div className='flex gap-4 mt-2'>
             <Button
               type='button'
               className={clsx(
-                " px-8 text-sm font-semibold text-white sm:w-auto",
+                "px-6 py-2 text-sm font-semibold text-white rounded-md shadow",
                 type === "restore" || type === "restoreAll"
-                  ? "bg-yellow-600"
-                  : "bg-red-600 hover:bg-red-500"
+                  ? "bg-gradient-to-r from-yellow-500 to-yellow-700"
+                  : "bg-gradient-to-r from-pink-600 to-purple-700"
               )}
               onClick={onClick}
-              label={type === "restore" ? "Restore" : "Delete"}
+              label={type === "restore" || type === "restoreAll" ? "Restore" : "Delete"}
             />
 
             <Button
               type='button'
-              className='bg-white px-8 text-sm font-semibold text-gray-900 sm:w-auto border'
+              className='bg-white px-6 py-2 text-sm font-semibold text-gray-800 border border-gray-300 rounded-md hover:bg-gray-100 transition'
               onClick={() => closeDialog()}
               label='Cancel'
             />
@@ -74,31 +74,28 @@ export function UserAction({ open, setOpen, onClick = () => {} }) {
   return (
     <>
       <ModalWrapper open={open} setOpen={closeDialog}>
-        <div className='py-4 w-full flex flex-col gap-4 items-center justify-center'>
-          <Dialog.Title as='h3' className=''>
-            <p className={clsx("p-3 rounded-full ", "text-red-600 bg-red-200")}>
+        <div className='py-6 px-4 w-full flex flex-col gap-6 items-center justify-center bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#1e40af] rounded-xl shadow-lg'>
+          <Dialog.Title as='h3'>
+            <p className='p-4 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-md'>
               <FaQuestion size={60} />
             </p>
           </Dialog.Title>
 
-          <p className='text-center text-gray-500'>
-            {"Are you sure you want to activate or deactive this account?"}
+          <p className='text-center text-gray-300 text-sm md:text-base'>
+            Are you sure you want to activate or deactivate this account?
           </p>
 
-          <div className='bg-gray-50 py-3 sm:flex sm:flex-row-reverse gap-4'>
+          <div className='flex gap-4 mt-2'>
             <Button
               type='button'
-              className={clsx(
-                " px-8 text-sm font-semibold text-white sm:w-auto",
-                "bg-red-600 hover:bg-red-500"
-              )}
+              className='px-6 py-2 text-sm font-semibold text-white bg-gradient-to-r from-pink-600 to-purple-700 rounded-md shadow'
               onClick={onClick}
-              label={"Yes"}
+              label='Yes'
             />
 
             <Button
               type='button'
-              className='bg-white px-8 text-sm font-semibold text-gray-900 sm:w-auto border'
+              className='bg-white px-6 py-2 text-sm font-semibold text-gray-800 border border-gray-300 rounded-md hover:bg-gray-100 transition'
               onClick={() => closeDialog()}
               label='No'
             />

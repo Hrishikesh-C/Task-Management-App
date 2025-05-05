@@ -27,7 +27,6 @@ const Login = () => {
             role: "admin",
             token: "fake_admin_token_123",
           };
-
           dispatch(setCredentials(adminUser));
           navigate("/dashboard");
           return;
@@ -50,9 +49,9 @@ const Login = () => {
   }, [user]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-[#0f2027] via-[#203a43] to-[#2c5364] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f2027] via-[#203a43] to-[#2c5364] px-4">
       <motion.div
-        className="max-w-7xl w-full flex flex-col-reverse lg:flex-row items-center justify-center gap-10 lg:gap-32 py-12"
+        className="max-w-7xl w-full flex flex-col-reverse lg:flex-row items-center justify-center gap-10 lg:gap-28 py-12"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7 }}
@@ -73,8 +72,7 @@ const Login = () => {
               Task Manager
             </span>
           </h1>
-
-          {/* Ball Animation */}
+          {/* Neon Ball Animation */}
           <div className="cell mt-10">
             <div className="circle rotate-in-up-left bg-gradient-to-r from-purple-400 to-pink-500"></div>
           </div>
@@ -82,7 +80,7 @@ const Login = () => {
 
         {/* Right Side - Login Form */}
         <motion.div
-          className="w-full max-w-md bg-[#1e293b]/90 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-8 text-white"
+          className="w-full max-w-md bg-[#1e293b]/90 backdrop-blur-md border border-white/10 rounded-2xl shadow-2xl p-8 text-white"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
@@ -136,13 +134,16 @@ const Login = () => {
 
             <p className="text-sm text-gray-400 text-center mt-4">
               Don&apos;t have an account?{" "}
-              <Link to="/register" className="text-purple-400 hover:underline font-medium">
+              <Link
+                to="/register"
+                className="text-purple-400 hover:underline font-medium"
+              >
                 Create an account
               </Link>
             </p>
           </form>
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-10">
             <Link
               to="/"
               className="inline-block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl shadow-lg font-semibold transition"
@@ -157,5 +158,3 @@ const Login = () => {
 };
 
 export default Login;
-
-

@@ -36,9 +36,9 @@ const ICONS = {
 };
 
 const bgColor = {
-  high: "bg-red-200",
-  medium: "bg-yellow-200",
-  low: "bg-blue-200",
+  high: "bg-red-300",
+  medium: "bg-yellow-300",
+  low: "bg-blue-300",
 };
 
 const TABS = [
@@ -48,17 +48,17 @@ const TABS = [
 
 const TASKTYPEICON = {
   commented: (
-    <div className='w-10 h-10 rounded-full bg-gray-500 flex items-center justify-center text-white'>
+    <div className='w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-white'>
       <MdOutlineMessage />
     </div>
   ),
   started: (
-    <div className='w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white'>
+    <div className='w-10 h-10 rounded-full bg-teal-600 flex items-center justify-center text-white'>
       <FaThumbsUp size={20} />
     </div>
   ),
   assigned: (
-    <div className='w-6 h-6 flex items-center justify-center rounded-full bg-gray-500 text-white'>
+    <div className='w-6 h-6 flex items-center justify-center rounded-full bg-gray-700 text-white'>
       <FaUser size={14} />
     </div>
   ),
@@ -73,7 +73,7 @@ const TASKTYPEICON = {
     </div>
   ),
   "in progress": (
-    <div className='w-8 h-8 flex items-center justify-center rounded-full bg-violet-600 text-white'>
+    <div className='w-8 h-8 flex items-center justify-center rounded-full bg-violet-700 text-white'>
       <GrInProgress size={16} />
     </div>
   ),
@@ -110,12 +110,12 @@ const TaskDetails = () => {
 
   return (
     <div className='w-full flex flex-col gap-3 mb-4 overflow-y-hidden'>
-      <h1 className='text-2xl text-gray-600 font-bold'>{task?.title}</h1>
+      <h1 className='text-3xl text-gray-100 font-bold'>{task?.title}</h1>
 
       <Tabs tabs={TABS} setSelected={setSelected}>
         {selected === 0 ? (
           <>
-            <div className='w-full flex flex-col md:flex-row gap-5 2xl:gap-8 bg-white shadow-md p-8 overflow-y-auto'>
+            <div className='w-full flex flex-col md:flex-row gap-5 2xl:gap-8 bg-gray-900 shadow-md p-8 overflow-y-auto'>
               {/* LEFT */}
               <div className='w-full md:w-1/2 space-y-8'>
                 <div className='flex items-center gap-5'>
@@ -127,7 +127,7 @@ const TaskDetails = () => {
                     )}
                   >
                     <span className='text-lg'>{ICONS[task?.priority]}</span>
-                    <span className='uppercase'>{task?.priority} Priority</span>
+                    <span className='uppercase text-gray-200'>{task?.priority} Priority</span>
                   </div>
 
                   <div className={clsx("flex items-center gap-2")}>
@@ -137,41 +137,41 @@ const TaskDetails = () => {
                         className={clsx("w-4 h-4 rounded-full", TASK_TYPE[task.stage])}
                       />
                     )}
-                    <span className='text-black uppercase'>{task?.stage || "No Stage"}</span>
+                    <span className='text-gray-100 uppercase'>{task?.stage || "No Stage"}</span>
                   </div>
                 </div>
 
-                <p className='text-gray-500'>
+                <p className='text-gray-400'>
                   Created At: {new Date(task?.date).toDateString()}
                 </p>
 
-                <div className='flex items-center gap-8 p-4 border-y border-gray-200'>
+                <div className='flex items-center gap-8 p-4 border-y border-gray-700'>
                   <div className='space-x-2'>
-                    <span className='font-semibold'>Assets :</span>
-                    <span>{task?.assets?.length}</span>
+                    <span className='font-semibold text-gray-100'>Assets :</span>
+                    <span className='text-gray-200'>{task?.assets?.length}</span>
                   </div>
 
-                  <span className='text-gray-400'>|</span>
+                  <span className='text-gray-500'>|</span>
 
                   <div className='space-x-2'>
-                    <span className='font-semibold'>Sub-Task :</span>
-                    <span>{task?.subTasks?.length}</span>
+                    <span className='font-semibold text-gray-100'>Sub-Task :</span>
+                    <span className='text-gray-200'>{task?.subTasks?.length}</span>
                   </div>
                 </div>
 
                 <div className='space-y-4 py-6'>
-                  <p className='text-gray-600 font-semibold text-sm'>
+                  <p className='text-gray-300 font-semibold text-sm'>
                     TASK TEAM
                   </p>
                   <div className='space-y-3'>
                     {task?.team?.map((m, index) => (
                       <div
                         key={index}
-                        className='flex gap-4 py-2 items-center border-t border-gray-200'
+                        className='flex gap-4 py-2 items-center border-t border-gray-700'
                       >
                         <div
                           className={
-                            "w-10 h-10 rounded-full text-white flex items-center justify-center text-sm -mr-1 bg-blue-600"
+                            "w-10 h-10 rounded-full text-white flex items-center justify-center text-sm -mr-1 bg-teal-600"
                           }
                         >
                           <span className='text-center'>
@@ -180,7 +180,7 @@ const TaskDetails = () => {
                         </div>
 
                         <div>
-                          <p className='text-lg font-semibold'>{m?.name}</p>
+                          <p className='text-lg font-semibold text-gray-200'>{m?.name}</p>
                           <span className='text-gray-500'>{m?.title}</span>
                         </div>
                       </div>
@@ -189,19 +189,19 @@ const TaskDetails = () => {
                 </div>
 
                 <div className='space-y-4 py-6'>
-                  <p className='text-gray-500 font-semibold text-sm'>
+                  <p className='text-gray-400 font-semibold text-sm'>
                     SUB-TASKS
                   </p>
                   <div className='space-y-8'>
                     {task?.subTasks?.map((el, index) => (
                       <div key={index} className='flex gap-3'>
-                        <div className='w-10 h-10 flex items-center justify-center rounded-full bg-violet-50-200'>
-                          <MdTaskAlt className='text-violet-600' size={26} />
+                        <div className='w-10 h-10 flex items-center justify-center rounded-full bg-violet-500'>
+                          <MdTaskAlt className='text-violet-200' size={26} />
                         </div>
 
                         <div className='space-y-1'>
                           <div className='flex gap-2 items-center'>
-                            <span className='text-sm text-gray-500'>
+                            <span className='text-sm text-gray-400'>
                               {new Date(el?.date).toDateString()}
                             </span>
 
@@ -210,7 +210,7 @@ const TaskDetails = () => {
                             </span>
                           </div>
 
-                          <p className='text-gray-700'>{el?.title}</p>
+                          <p className='text-gray-200'>{el?.title}</p>
                         </div>
                       </div>
                     ))}
@@ -219,7 +219,7 @@ const TaskDetails = () => {
               </div>
               {/* RIGHT */}
               <div className='w-full md:w-1/2 space-y-8'>
-                <p className='text-lg font-semibold'>ASSETS</p>
+                <p className='text-lg font-semibold text-gray-100'>ASSETS</p>
 
                 <div className='w-full grid grid-cols-2 gap-4'>
                   {task?.assets?.map((el, index) => (

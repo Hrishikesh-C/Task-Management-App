@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import Title from "../components/Title";
 import Button from "../components/Button";
 import { IoMdAdd } from "react-icons/io";
-import { summary } from "../assets/data";
 import { getInitials } from "../utils";
 import clsx from "clsx";
 import ConfirmatioDialog, { UserAction } from "../components/Dialogs";
 import AddUser from "../components/AddUser";
-import { useDeleteUserMutation, useGetTeamListQuery, useUserActionMutation } from "../redux/slices/api/userApiSlice";
+import {
+  useDeleteUserMutation,
+  useGetTeamListQuery,
+  useUserActionMutation,
+} from "../redux/slices/api/userApiSlice";
 import { toast } from "sonner";
 
 const Users = () => {
@@ -16,41 +19,38 @@ const Users = () => {
   const [openAction, setOpenAction] = useState(false);
   const [selected, setSelected] = useState(null);
 
-
-  const {data, isLoading, refetch} = useGetTeamListQuery();
+  const { data, isLoading, refetch } = useGetTeamListQuery();
   const [deleteUser] = useDeleteUserMutation();
   const [userAction] = useUserActionMutation();
 
-  const userActionHandler =async () => {
+  const userActionHandler = async () => {
     try {
-      const result =await userAction({
+      const result = await userAction({
         isActive: !selected?.isActive,
         id: selected?._id,
       });
 
       refetch();
-
       toast.success(result.data?.message);
       setSelected(null);
-      setTimeout(()=> {
+      setTimeout(() => {
         setOpenAction(false);
-      },500);
+      }, 500);
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error);
     }
   };
 
-  const deleteHandler = async() => {
+  const deleteHandler = async () => {
     try {
-      const result = await deleteUser(selected)
-
+      await deleteUser(selected);
       refetch();
       toast.success("Deleted successfully");
       setSelected(null);
-      setTimeout(()=> {
+      setTimeout(() => {
         setOpenDialog(false);
-      },500);
+      }, 500);
     } catch (err) {
       console.log(err);
       toast.error(err?.data?.message || err.error);
@@ -73,58 +73,55 @@ const Users = () => {
   };
 
   const TableHeader = () => (
-    <thead className='border-b border-gray-300'>
-      <tr className='text-black text-left'>
-        <th className='py-2'>Full Name</th>
-        <th className='py-2'>Title</th>
-        <th className='py-2'>Email</th>
-        <th className='py-2'>Role</th>
-        <th className='py-2'>Active</th>
+    <thead className="border-b border-indigo-400/20">
+      <tr className="text-indigo-300 text-left text-sm">
+        <th className="py-3">Full Name</th>
+        <th className="py-3">Title</th>
+        <th className="py-3">Email</th>
+        <th className="py-3">Role</th>
+        <th className="py-3">Active</th>
+        <th className="py-3 text-right">Actions</th>
       </tr>
     </thead>
   );
 
   const TableRow = ({ user }) => (
-    <tr className='border-b border-gray-200 text-gray-600 hover:bg-gray-400/10'>
-      <td className='p-2'>
-        <div className='flex items-center gap-3'>
-          <div className='w-9 h-9 rounded-full text-white flex items-center justify-center text-sm bg-blue-700'>
-            <span className='text-xs md:text-sm text-center'>
-              {getInitials(user.name)}
-            </span>
+    <tr className="border-b border-indigo-400/10 hover:bg-indigo-900/30 transition text-indigo-100 text-sm">
+      <td className="p-3">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-full text-white flex items-center justify-center text-sm bg-gradient-to-r from-blue-500 to-indigo-600 shadow-md">
+            {getInitials(user.name)}
           </div>
           {user.name}
         </div>
       </td>
-
-      <td className='p-2'>{user.title}</td>
-      <td className='p-2'>{user.email || "user.emal.com"}</td>
-      <td className='p-2'>{user.role}</td>
-
-      <td>
+      <td className="p-3">{user.title}</td>
+      <td className="p-3">{user.email || "user.email.com"}</td>
+      <td className="p-3">{user.role}</td>
+      <td className="p-3">
         <button
           onClick={() => userStatusClick(user)}
           className={clsx(
-            "w-fit px-4 py-1 rounded-full",
-            user?.isActive ? "bg-blue-200" : "bg-yellow-100"
+            "px-4 py-1 rounded-full text-xs font-semibold",
+            user?.isActive
+              ? "bg-green-600 text-white hover:bg-green-500"
+              : "bg-yellow-500 text-black hover:bg-yellow-400"
           )}
         >
           {user?.isActive ? "Active" : "Disabled"}
         </button>
       </td>
-
-      <td className='p-2 flex gap-4 justify-end'>
+      <td className="p-3 flex gap-3 justify-end">
         <Button
-          className='text-blue-600 hover:text-blue-500 font-semibold sm:px-0'
-          label='Edit'
-          type='button'
+          className="text-indigo-300 hover:text-indigo-100 transition font-semibold"
+          label="Edit"
+          type="button"
           onClick={() => editClick(user)}
         />
-
         <Button
-          className='text-red-700 hover:text-red-500 font-semibold sm:px-0'
-          label='Delete'
-          type='button'
+          className="text-red-400 hover:text-red-200 transition font-semibold"
+          label="Delete"
+          type="button"
           onClick={() => deleteClick(user?._id)}
         />
       </td>
@@ -133,23 +130,23 @@ const Users = () => {
 
   return (
     <>
-      <div className='w-full md:px-1 px-0 mb-6'>
-        <div className='flex items-center justify-between mb-8'>
-          <Title title='  Team Members' />
+      <div className="min-h-screen py-10 px-6 md:px-12 bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#3B82F6] text-white">
+        <div className="flex items-center justify-between mb-8">
+          <Title title="Team Members" className="text-indigo-300 text-3xl font-bold" />
           <Button
-            label='Add New User'
-            icon={<IoMdAdd className='text-lg' />}
-            className='flex flex-row-reverse gap-1 items-center bg-blue-600 text-white rounded-md 2xl:py-2.5'
+            label="Add New User"
+            icon={<IoMdAdd className="text-lg" />}
+            className="flex gap-2 items-center bg-indigo-600 hover:bg-indigo-500 transition text-white rounded-md px-4 py-2 shadow-lg"
             onClick={() => setOpen(true)}
           />
         </div>
 
-        <div className='bg-white px-2 md:px-4 py-4 shadow-md rounded'>
-          <div className='overflow-x-auto'>
-            <table className='w-full mb-5'>
+        <div className="bg-[#1E293B] p-4 rounded-2xl shadow-lg border border-indigo-400/20">
+          <div className="overflow-x-auto">
+            <table className="w-full">
               <TableHeader />
               <tbody>
-              {data?.map((user, index) => (
+                {data?.map((user, index) => (
                   <TableRow key={index} user={user} />
                 ))}
               </tbody>

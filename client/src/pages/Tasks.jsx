@@ -19,9 +19,9 @@ const TABS = [
 ];
 
 const TASK_TYPE = {
-  todo: "bg-blue-600",
-  "in progress": "bg-yellow-600",
-  completed: "bg-green-600",
+  todo: "bg-gradient-to-r from-blue-500 to-blue-700 text-white",
+  "in progress": "bg-gradient-to-r from-yellow-500 to-yellow-700 text-white",
+  completed: "bg-gradient-to-r from-green-500 to-green-700 text-white",
 };
 
 const Tasks = () => {
@@ -33,22 +33,21 @@ const Tasks = () => {
   const status = params?.status || "";
 
   // Call the get all tasks query
-  const { data, isLoading, refetch} = useGetAllTaskQuery({
-    strQuery: status || '',  // Use status if it is available, else send an empty string
+  const { data, isLoading, refetch } = useGetAllTaskQuery({
+    strQuery: status || '', // Use status if it is available, else send an empty string
     isTrashed: false,
     search: '',
   });
 
   // Log data to see if it's populated
   console.log("Fetched data from API:", data);
-  
 
   return isLoading ? (
     <div className="py-10">
       <Loading />
     </div>
   ) : (
-    <div className="w-full">
+    <div className="w-full bg-gradient-to-tl from-gray-800 via-gray-900 to-black text-white p-6 rounded-lg shadow-md">
       <div className="flex items-center justify-between mb-4">
         <Title title={status ? `${status} Tasks` : "Tasks"} />
 
@@ -57,7 +56,7 @@ const Tasks = () => {
             onClick={() => setOpen(true)}
             label="Create Task"
             icon={<IoMdAdd className="text-lg" />}
-            className="flex flex-row-reverse gap-1 items-center bg-blue-600 text-white rounded-md py-2 2xl:py-2.5"
+            className="flex flex-row-reverse gap-1 items-center bg-blue-600 text-white rounded-md py-2 2xl:py-2.5 hover:bg-blue-700 transition-all"
           />
         )}
       </div>
@@ -72,9 +71,7 @@ const Tasks = () => {
         )}
 
         {selected !== 1 ? (
-          // <BoardView tasks={data?.tasks} />
           <BoardView tasks={data?.tasks || []} />
-
         ) : (
           <div className="w-full">
             <Table tasks={data?.tasks || []} />

@@ -1,5 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useRef } from "react";
+import { motion } from "framer-motion";
 
 const ModalWrapper = ({ open, setOpen, children }) => {
   const cancelButtonRef = useRef(null);
@@ -7,45 +8,47 @@ const ModalWrapper = ({ open, setOpen, children }) => {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
-        as='div'
-        className='relative z-10 w-full'
+        as="div"
+        className="relative z-50"
         initialFocus={cancelButtonRef}
-        onClose={() => setOpen(false)}
+        onClose={setOpen}
       >
+        {/* Backdrop */}
         <Transition.Child
           as={Fragment}
-          enter='ease-out duration-300'
-          enterFrom='opacity-0'
-          enterTo='opacity-100'
-          leave='ease-in duration-200'
-          leaveFrom='opacity-100'
-          leaveTo='opacity-0'
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
         >
-          <div className='fixed inset-0 bg-black bg-opacity-60 transition-opacity' />
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" />
         </Transition.Child>
 
-        <div className='fixed inset-0 z-10 w-screen overflow-y-auto'>
-          <div className='flex h-full items-center justify-center p-4 text-center sm:p-0'>
-            <Transition.Child
-              as={Fragment}
-              enter='ease-out duration-300'
-              enterFrom='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
-              enterTo='opacity-100 translate-y-0 sm:scale-100'
-              leave='ease-in duration-200'
-              leaveFrom='opacity-100 translate-y-0 sm:scale-100'
-              leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
+        {/* Modal Panel */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0 translate-y-4 sm:scale-95"
+            enterTo="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+            leaveTo="opacity-0 translate-y-4 sm:scale-95"
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              className="relative w-full max-w-md bg-[#0F172A] border border-indigo-500/30 backdrop-blur-xl rounded-xl shadow-2xl p-6"
             >
-              <Dialog.Panel className='w-full relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all pb-0 sm:my-8 sm:w-full sm:max-w-lg'>
-                <div className='bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4'>
-                  <div className='sm:flex sm:items-start'>
-                    <div className='w-full mt-3  sm:ml-4 sm:mt-0 sm:text-left'>
-                      {children}
-                    </div>
-                  </div>
-                </div>
-              </Dialog.Panel>
-            </Transition.Child>
-          </div>
+              {/* Glowing frame */}
+              <div className="absolute inset-0 rounded-xl border border-indigo-400/10 pointer-events-none" />
+              {children}
+            </motion.div>
+          </Transition.Child>
         </div>
       </Dialog>
     </Transition.Root>
